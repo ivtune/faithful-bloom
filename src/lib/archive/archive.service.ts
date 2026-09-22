@@ -9,7 +9,6 @@ import {
 import type {
   ArchiveStats,
   Category,
-  Category,
   CategoryId,
   CategoryTotals,
   CountryArea,
