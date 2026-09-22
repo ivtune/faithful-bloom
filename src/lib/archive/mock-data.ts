@@ -106,7 +106,7 @@ export function getZones(categoryId: CategoryId): Zone[] {
 
 export function getCountries(categoryId: CategoryId): CountryArea[] {
   return ZONE_DEFS.flatMap((zone) =>
-    COUNTRY_DEFS[zone.id].map((name) => ({
+    (COUNTRY_DEFS[zone.id] ?? []).map((name) => ({
       id: slugify(name),
       name,
       zoneId: zone.id,
@@ -152,13 +152,14 @@ export function getCountryEvents(
 
   const zone = ZONE_DEFS.find((z) => z.id === zoneId);
   const countryName = zone
-    ? COUNTRY_DEFS[zone.id].find((c) => slugify(c) === countryId)
+    ? COUNTRY_DEFS[zone.id]?.find((c) => slugify(c) === countryId)
     : undefined;
 
   if (!zone || !countryName) {
     countryEventCache.set(key, []);
     return [];
   }
+  const countryLabel: string = countryName;
 
   const rand = mulberry32(hashString(key));
   // A few countries intentionally have no events yet, to demonstrate empty states.
@@ -167,10 +168,12 @@ export function getCountryEvents(
   const names = [...EVENT_NAME_POOL];
   for (let i = names.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
-    [names[i], names[j]] = [names[j], names[i]];
+    const swapped = names[i]!;
+    names[i] = names[j]!;
+    names[j] = swapped;
   }
 
-  const countrySlug = slugify(countryName);
+  const countrySlug = slugify(countryLabel);
   const events: EventDetail[] = [];
 
   for (let i = 0; i < eventCount; i++) {
