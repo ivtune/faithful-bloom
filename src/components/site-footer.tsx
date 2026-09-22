@@ -1,11 +1,17 @@
 import { Link } from "@tanstack/react-router";
 
-const FOOTER_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/browse/ministries", label: "Ministries" },
-  { to: "/browse/margins", label: "Margins" },
-  { to: "/search", label: "Search" },
-] as const;
+interface FooterLink {
+  label: string;
+  to: string;
+  params?: Record<string, string>;
+}
+
+const FOOTER_LINKS: FooterLink[] = [
+  { label: "Home", to: "/" },
+  { label: "Ministries", to: "/browse/$category", params: { category: "ministries" } },
+  { label: "Margins", to: "/browse/$category", params: { category: "margins" } },
+  { label: "Search", to: "/search" },
+];
 
 export function SiteFooter() {
   return (
@@ -25,8 +31,9 @@ export function SiteFooter() {
           <nav className="flex flex-col gap-2.5 text-sm">
             {FOOTER_LINKS.map((link) => (
               <Link
-                key={link.to}
+                key={link.label}
                 to={link.to}
+                params={link.params}
                 className="text-primary-foreground/80 transition-colors hover:text-primary-foreground"
               >
                 {link.label}
