@@ -2,12 +2,29 @@ import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 
-const NAV_ITEMS = [
-  { to: "/", label: "Home" },
-  { to: "/browse/ministries", label: "Ministries" },
-  { to: "/browse/margins", label: "Margins" },
-  { to: "/search", label: "Search" },
-] as const;
+interface NavItem {
+  label: string;
+  to: string;
+  params?: Record<string, string>;
+  match: string;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { label: "Home", to: "/", match: "/" },
+  {
+    label: "Ministries",
+    to: "/browse/$category",
+    params: { category: "ministries" },
+    match: "/browse/ministries",
+  },
+  {
+    label: "Margins",
+    to: "/browse/$category",
+    params: { category: "margins" },
+    match: "/browse/margins",
+  },
+  { label: "Search", to: "/search", match: "/search" },
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

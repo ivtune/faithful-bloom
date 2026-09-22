@@ -53,14 +53,16 @@ function Index() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/browse/ministries"
+                to="/browse/$category"
+                params={{ category: "ministries" }}
                 className="inline-flex items-center gap-2 rounded-full bg-primary-foreground px-6 py-3 text-sm font-semibold text-primary transition-colors hover:bg-secondary"
               >
                 Browse Ministries
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/browse/margins"
+                to="/browse/$category"
+                params={{ category: "margins" }}
                 className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/40 px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/10"
               >
                 Browse Margins
@@ -104,7 +106,8 @@ function Index() {
             </p>
           </div>
           <Link
-            to="/browse/ministries"
+            to="/browse/$category"
+            params={{ category: "ministries" }}
             className="hidden text-sm font-medium text-primary hover:underline sm:inline-flex"
           >
             View all
@@ -156,7 +159,8 @@ function Index() {
         </h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Link
-            to="/browse/ministries"
+            to="/browse/$category"
+            params={{ category: "ministries" }}
             className="group rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-md"
           >
             <div className="flex items-center justify-between">
@@ -170,7 +174,8 @@ function Index() {
             </p>
           </Link>
           <Link
-            to="/browse/margins"
+            to="/browse/$category"
+            params={{ category: "margins" }}
             className="group rounded-xl border border-border bg-card p-6 transition-shadow hover:shadow-md"
           >
             <div className="flex items-center justify-between">

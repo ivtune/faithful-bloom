@@ -177,7 +177,7 @@ export function getCountryEvents(
   const events: EventDetail[] = [];
 
   for (let i = 0; i < eventCount; i++) {
-    const name = names[i % names.length];
+    const name = names[i % names.length]!;
     const eventSlug = slugify(name);
     const id = `${categoryId}-${zoneId}-${countryId}-${eventSlug}`;
     const month = 1 + Math.floor(rand() * 12);
@@ -202,8 +202,8 @@ export function getCountryEvents(
       name: `${countrySlug}-${eventSlug}-clip-${String(v + 1).padStart(2, "0")}.mp4`,
       type: "video" as const,
       thumbnail: `https://picsum.photos/seed/${id}-v${v + 1}/800/450`,
-      src: SAMPLE_VIDEOS[(hashString(id) + v) % SAMPLE_VIDEOS.length],
-      downloadReference: SAMPLE_VIDEOS[(hashString(id) + v) % SAMPLE_VIDEOS.length],
+      src: SAMPLE_VIDEOS[(hashString(id) + v) % SAMPLE_VIDEOS.length]!,
+      downloadReference: SAMPLE_VIDEOS[(hashString(id) + v) % SAMPLE_VIDEOS.length]!,
     }));
 
     events.push({
