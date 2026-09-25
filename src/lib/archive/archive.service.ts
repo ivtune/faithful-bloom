@@ -1,12 +1,6 @@
-import {
-  CATEGORIES,
-  YEARS,
-  getCountries,
-  getCountryEvents,
-  getZones,
-  slugify,
-} from "./mock-data";
+import { slugify } from "./slug";
 import type {
+  ArchiveSnapshot,
   ArchiveStats,
   Category,
   CategoryId,
@@ -22,11 +16,53 @@ import type {
 /*
  * ARCHIVE DATA SERVICE
  *
- * This is the single interface between the UI and the archive data.
- * The UI never touches the mock data directly. When the private Google
- * Drive integration is added later, only this file changes — the UI,
- * routes and components stay exactly as they are.
+ * Single interface between the UI and the archive data. Data comes from the
+ * organisation's Google Drive (see drive.server.ts), loaded once as a snapshot
+ * by the root route and installed here with setArchiveSnapshot().
  */
+
+const CATEGORIES: Category[] = [
+  {
+    id: "ministries",
+    name: "Ministries",
+    description: "Photos and videos from EHC ministry work across the three zones.",
+  },
+  {
+    id: "margins",
+    name: "Margins",
+    description: "Photos and videos from EHC Margins outreach across the three zones.",
+  },
+];
+
+let snapshot: ArchiveSnapshot = { countries: [], events: [], generatedAt: "" };
+const eventIndex = new Map<string, EventDetail>();
+
+export function setArchiveSnapshot(next: ArchiveSnapshot | undefined): void {
+  if (!next || next === snapshot) return;
+  snapshot = next;
+  eventIndex.clear();
+  for (const e of next.events) eventIndex.set(e.id, e);
+}
+
+function getCountries(categoryId: CategoryId): CountryArea[] {
+  return snapshot.countries.filter((c) => c.categoryId === categoryId);
+}
+
+function getZones(categoryId: CategoryId): Zone[] {
+  const ids = new Set(getCountries(categoryId).map((c) => c.zoneId));
+  if (ids.size === 0) ["zone-1", "zone-2", "zone-3"].forEach((z) => ids.add(z));
+  return [...ids].sort().map((id) => ({
+    id,
+    name: `Zone ${id.replace("zone-", "")}`,
+    categoryId,
+  }));
+}
+
+function getCountryEvents(categoryId: CategoryId, zoneId: string, countryId: string): EventDetail[] {
+  return snapshot.events.filter(
+    (e) => e.categoryId === categoryId && e.zoneId === zoneId && e.countryId === countryId,
+  );
+}
 
 export function getCategories(): Category[] {
   return CATEGORIES;
@@ -45,8 +81,7 @@ export function getZonesForCategory(categoryId: CategoryId): Zone[] {
 }
 
 export function getZoneName(zoneId: string): string {
-  const zone = getZones("ministries").find((z) => z.id === zoneId);
-  return zone ? zone.name : zoneId;
+  return zoneId.startsWith("zone-") ? `Zone ${zoneId.replace("zone-", "")}` : zoneId;
 }
 
 export function getCountriesForZone(categoryId: CategoryId, zoneId: string): CountryArea[] {
@@ -64,7 +99,9 @@ export function getCountryArea(
 }
 
 export function getYears(): number[] {
-  return YEARS;
+  const years = new Set<number>([2026]);
+  for (const e of snapshot.events) years.add(e.year);
+  return [...years].sort((a, b) => b - a);
 }
 
 function toSummary(event: EventDetail): EventSummary {
@@ -123,32 +160,12 @@ export function getYearTotals(
   };
 }
 
-const eventIndex = new Map<string, EventDetail>();
-let eventIndexBuilt = false;
-
-function buildEventIndex(): void {
-  if (eventIndexBuilt) return;
-  for (const category of CATEGORIES) {
-    for (const zone of getZones(category.id)) {
-      for (const country of getCountries(category.id)) {
-        if (country.zoneId !== zone.id) continue;
-        for (const event of getCountryEvents(category.id, zone.id, country.id)) {
-          eventIndex.set(event.id, event);
-        }
-      }
-    }
-  }
-  eventIndexBuilt = true;
-}
-
 export function getEvent(eventId: string): EventDetail | undefined {
-  buildEventIndex();
   return eventIndex.get(eventId);
 }
 
 function getAllEvents(): EventDetail[] {
-  buildEventIndex();
-  return [...eventIndex.values()];
+  return snapshot.events;
 }
 
 export function getRecentEvents(limit: number): EventSummary[] {
@@ -164,15 +181,20 @@ export function getFeaturedMedia(limit: number): FeaturedMedia[] {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const featured: FeaturedMedia[] = [];
-  for (const event of recent) {
-    if (featured.length >= limit) break;
-    const photo = event.photos[0];
-    featured.push({
-      id: photo.id,
-      name: photo.name,
-      thumbnail: photo.thumbnail,
-      event: toSummary(event),
-    });
+  for (let i = 0; featured.length < limit; i++) {
+    let added = false;
+    for (const event of recent) {
+      const photo = event.photos[i];
+      if (!photo || featured.length >= limit) continue;
+      added = true;
+      featured.push({
+        id: photo.id,
+        name: photo.name,
+        thumbnail: photo.thumbnail,
+        event: toSummary(event),
+      });
+    }
+    if (!added) break;
   }
   return featured;
 }

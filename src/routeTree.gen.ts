@@ -11,10 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 import { Route as EventEventIdRouteImport } from './routes/event.$eventId'
-import { Route as BrowseCategoryZoneRouteImport } from './routes/browse.$category.$zone'
-import { Route as BrowseCategoryZoneCountryRouteImport } from './routes/browse.$category.$zone.$country'
+import { Route as ApiMediaFileIdRouteImport } from './routes/api/media.$fileId'
+import { Route as BrowseCategoryIndexRouteImport } from './routes/browse.$category.index'
+import { Route as BrowseCategoryZoneIndexRouteImport } from './routes/browse.$category.$zone.index'
+import { Route as BrowseCategoryZoneCountryIndexRouteImport } from './routes/browse.$category.$zone.$country.index'
 import { Route as BrowseCategoryZoneCountryYearRouteImport } from './routes/browse.$category.$zone.$country.$year'
 
 const IndexRoute = IndexRouteImport.update({
@@ -27,97 +28,112 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrowseCategoryRoute = BrowseCategoryRouteImport.update({
-  id: '/browse/$category',
-  path: '/browse/$category',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EventEventIdRoute = EventEventIdRouteImport.update({
   id: '/event/$eventId',
   path: '/event/$eventId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrowseCategoryZoneRoute = BrowseCategoryZoneRouteImport.update({
-  id: '/$zone',
-  path: '/$zone',
-  getParentRoute: () => BrowseCategoryRoute,
+const ApiMediaFileIdRoute = ApiMediaFileIdRouteImport.update({
+  id: '/api/media/$fileId',
+  path: '/api/media/$fileId',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const BrowseCategoryZoneCountryRoute =
-  BrowseCategoryZoneCountryRouteImport.update({
-    id: '/$country',
-    path: '/$country',
-    getParentRoute: () => BrowseCategoryZoneRoute,
+const BrowseCategoryIndexRoute = BrowseCategoryIndexRouteImport.update({
+  id: '/browse/$category/',
+  path: '/browse/$category/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseCategoryZoneIndexRoute = BrowseCategoryZoneIndexRouteImport.update({
+  id: '/browse/$category/$zone/',
+  path: '/browse/$category/$zone/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseCategoryZoneCountryIndexRoute =
+  BrowseCategoryZoneCountryIndexRouteImport.update({
+    id: '/browse/$category/$zone/$country/',
+    path: '/browse/$category/$zone/$country/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const BrowseCategoryZoneCountryYearRoute =
   BrowseCategoryZoneCountryYearRouteImport.update({
-    id: '/$year',
-    path: '/$year',
-    getParentRoute: () => BrowseCategoryZoneCountryRoute,
+    id: '/browse/$category/$zone/$country/$year',
+    path: '/browse/$category/$zone/$country/$year',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
-  '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
-  '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
-  '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
+  '/browse/$category/': typeof BrowseCategoryIndexRoute
+  '/browse/$category/$zone/': typeof BrowseCategoryZoneIndexRoute
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
+  '/browse/$category/$zone/$country/': typeof BrowseCategoryZoneCountryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
-  '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
-  '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
-  '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
+  '/browse/$category': typeof BrowseCategoryIndexRoute
+  '/browse/$category/$zone': typeof BrowseCategoryZoneIndexRoute
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
+  '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
-  '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
-  '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
-  '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
+  '/browse/$category/': typeof BrowseCategoryIndexRoute
+  '/browse/$category/$zone/': typeof BrowseCategoryZoneIndexRoute
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
+  '/browse/$category/$zone/$country/': typeof BrowseCategoryZoneCountryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/search'
-    | '/browse/$category'
     | '/event/$eventId'
-    | '/browse/$category/$zone'
-    | '/browse/$category/$zone/$country'
+    | '/api/media/$fileId'
+    | '/browse/$category/'
+    | '/browse/$category/$zone/'
     | '/browse/$category/$zone/$country/$year'
+    | '/browse/$category/$zone/$country/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/search'
-    | '/browse/$category'
     | '/event/$eventId'
+    | '/api/media/$fileId'
+    | '/browse/$category'
     | '/browse/$category/$zone'
-    | '/browse/$category/$zone/$country'
     | '/browse/$category/$zone/$country/$year'
+    | '/browse/$category/$zone/$country'
   id:
     | '__root__'
     | '/'
     | '/search'
-    | '/browse/$category'
     | '/event/$eventId'
-    | '/browse/$category/$zone'
-    | '/browse/$category/$zone/$country'
+    | '/api/media/$fileId'
+    | '/browse/$category/'
+    | '/browse/$category/$zone/'
     | '/browse/$category/$zone/$country/$year'
+    | '/browse/$category/$zone/$country/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchRoute: typeof SearchRoute
-  BrowseCategoryRoute: typeof BrowseCategoryRouteWithChildren
   EventEventIdRoute: typeof EventEventIdRoute
+  ApiMediaFileIdRoute: typeof ApiMediaFileIdRoute
+  BrowseCategoryIndexRoute: typeof BrowseCategoryIndexRoute
+  BrowseCategoryZoneIndexRoute: typeof BrowseCategoryZoneIndexRoute
+  BrowseCategoryZoneCountryYearRoute: typeof BrowseCategoryZoneCountryYearRoute
+  BrowseCategoryZoneCountryIndexRoute: typeof BrowseCategoryZoneCountryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -136,13 +152,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/browse/$category': {
-      id: '/browse/$category'
-      path: '/browse/$category'
-      fullPath: '/browse/$category'
-      preLoaderRoute: typeof BrowseCategoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/event/$eventId': {
       id: '/event/$eventId'
       path: '/event/$eventId'
@@ -150,72 +159,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventEventIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/browse/$category/$zone': {
-      id: '/browse/$category/$zone'
-      path: '/$zone'
-      fullPath: '/browse/$category/$zone'
-      preLoaderRoute: typeof BrowseCategoryZoneRouteImport
-      parentRoute: typeof BrowseCategoryRoute
+    '/api/media/$fileId': {
+      id: '/api/media/$fileId'
+      path: '/api/media/$fileId'
+      fullPath: '/api/media/$fileId'
+      preLoaderRoute: typeof ApiMediaFileIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/browse/$category/$zone/$country': {
-      id: '/browse/$category/$zone/$country'
-      path: '/$country'
-      fullPath: '/browse/$category/$zone/$country'
-      preLoaderRoute: typeof BrowseCategoryZoneCountryRouteImport
-      parentRoute: typeof BrowseCategoryZoneRoute
+    '/browse/$category/': {
+      id: '/browse/$category/'
+      path: '/browse/$category'
+      fullPath: '/browse/$category/'
+      preLoaderRoute: typeof BrowseCategoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse/$category/$zone/': {
+      id: '/browse/$category/$zone/'
+      path: '/browse/$category/$zone'
+      fullPath: '/browse/$category/$zone/'
+      preLoaderRoute: typeof BrowseCategoryZoneIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse/$category/$zone/$country/': {
+      id: '/browse/$category/$zone/$country/'
+      path: '/browse/$category/$zone/$country'
+      fullPath: '/browse/$category/$zone/$country/'
+      preLoaderRoute: typeof BrowseCategoryZoneCountryIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/browse/$category/$zone/$country/$year': {
       id: '/browse/$category/$zone/$country/$year'
-      path: '/$year'
+      path: '/browse/$category/$zone/$country/$year'
       fullPath: '/browse/$category/$zone/$country/$year'
       preLoaderRoute: typeof BrowseCategoryZoneCountryYearRouteImport
-      parentRoute: typeof BrowseCategoryZoneCountryRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface BrowseCategoryZoneCountryRouteChildren {
-  BrowseCategoryZoneCountryYearRoute: typeof BrowseCategoryZoneCountryYearRoute
-}
-
-const BrowseCategoryZoneCountryRouteChildren: BrowseCategoryZoneCountryRouteChildren =
-  {
-    BrowseCategoryZoneCountryYearRoute: BrowseCategoryZoneCountryYearRoute,
-  }
-
-const BrowseCategoryZoneCountryRouteWithChildren =
-  BrowseCategoryZoneCountryRoute._addFileChildren(
-    BrowseCategoryZoneCountryRouteChildren,
-  )
-
-interface BrowseCategoryZoneRouteChildren {
-  BrowseCategoryZoneCountryRoute: typeof BrowseCategoryZoneCountryRouteWithChildren
-}
-
-const BrowseCategoryZoneRouteChildren: BrowseCategoryZoneRouteChildren = {
-  BrowseCategoryZoneCountryRoute: BrowseCategoryZoneCountryRouteWithChildren,
-}
-
-const BrowseCategoryZoneRouteWithChildren =
-  BrowseCategoryZoneRoute._addFileChildren(BrowseCategoryZoneRouteChildren)
-
-interface BrowseCategoryRouteChildren {
-  BrowseCategoryZoneRoute: typeof BrowseCategoryZoneRouteWithChildren
-}
-
-const BrowseCategoryRouteChildren: BrowseCategoryRouteChildren = {
-  BrowseCategoryZoneRoute: BrowseCategoryZoneRouteWithChildren,
-}
-
-const BrowseCategoryRouteWithChildren = BrowseCategoryRoute._addFileChildren(
-  BrowseCategoryRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRoute,
-  BrowseCategoryRoute: BrowseCategoryRouteWithChildren,
   EventEventIdRoute: EventEventIdRoute,
+  ApiMediaFileIdRoute: ApiMediaFileIdRoute,
+  BrowseCategoryIndexRoute: BrowseCategoryIndexRoute,
+  BrowseCategoryZoneIndexRoute: BrowseCategoryZoneIndexRoute,
+  BrowseCategoryZoneCountryYearRoute: BrowseCategoryZoneCountryYearRoute,
+  BrowseCategoryZoneCountryIndexRoute: BrowseCategoryZoneCountryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

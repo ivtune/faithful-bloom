@@ -92,3 +92,9 @@ export interface BreadcrumbItem {
   to?: string;
   params?: Record<string, string>;
 }
+
+export interface ArchiveSnapshot {
+  countries: CountryArea[];
+  events: EventDetail[];
+  generatedAt: string;
+}
