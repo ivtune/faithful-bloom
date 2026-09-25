@@ -56,9 +56,9 @@ const BrowseCategoryZoneCountryIndexRoute =
   } as any)
 const BrowseCategoryZoneCountryYearRoute =
   BrowseCategoryZoneCountryYearRouteImport.update({
-    id: '/$year',
-    path: '/$year',
-    getParentRoute: () => BrowseCategoryZoneCountryRoute,
+    id: '/browse/$category/$zone/$country/$year',
+    path: '/browse/$category/$zone/$country/$year',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -132,6 +132,7 @@ export interface RootRouteChildren {
   ApiMediaFileIdRoute: typeof ApiMediaFileIdRoute
   BrowseCategoryIndexRoute: typeof BrowseCategoryIndexRoute
   BrowseCategoryZoneIndexRoute: typeof BrowseCategoryZoneIndexRoute
+  BrowseCategoryZoneCountryYearRoute: typeof BrowseCategoryZoneCountryYearRoute
   BrowseCategoryZoneCountryIndexRoute: typeof BrowseCategoryZoneCountryIndexRoute
 }
 
@@ -188,10 +189,10 @@ declare module '@tanstack/react-router' {
     }
     '/browse/$category/$zone/$country/$year': {
       id: '/browse/$category/$zone/$country/$year'
-      path: '/$year'
+      path: '/browse/$category/$zone/$country/$year'
       fullPath: '/browse/$category/$zone/$country/$year'
       preLoaderRoute: typeof BrowseCategoryZoneCountryYearRouteImport
-      parentRoute: typeof BrowseCategoryZoneCountryRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -203,6 +204,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMediaFileIdRoute: ApiMediaFileIdRoute,
   BrowseCategoryIndexRoute: BrowseCategoryIndexRoute,
   BrowseCategoryZoneIndexRoute: BrowseCategoryZoneIndexRoute,
+  BrowseCategoryZoneCountryYearRoute: BrowseCategoryZoneCountryYearRoute,
   BrowseCategoryZoneCountryIndexRoute: BrowseCategoryZoneCountryIndexRoute,
 }
 export const routeTree = rootRouteImport
