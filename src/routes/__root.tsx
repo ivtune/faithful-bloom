@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { archiveSnapshotQuery } from "@/lib/archive/archive.functions";
+import { setArchiveSnapshot } from "@/lib/archive/archive.service";
 
 function NotFoundComponent() {
   return (
@@ -117,6 +119,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
+  loader: async ({ context }) => {
+    const snap = await context.queryClient.ensureQueryData(archiveSnapshotQuery);
+    setArchiveSnapshot(snap);
+    return snap;
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -139,6 +146,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  setArchiveSnapshot(Route.useLoaderData());
+
 
   return (
     <QueryClientProvider client={queryClient}>

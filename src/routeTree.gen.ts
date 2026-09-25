@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 import { Route as EventEventIdRouteImport } from './routes/event.$eventId'
+import { Route as ApiMediaFileIdRouteImport } from './routes/api/media.$fileId'
 import { Route as BrowseCategoryZoneRouteImport } from './routes/browse.$category.$zone'
 import { Route as BrowseCategoryZoneCountryRouteImport } from './routes/browse.$category.$zone.$country'
 import { Route as BrowseCategoryZoneCountryYearRouteImport } from './routes/browse.$category.$zone.$country.$year'
@@ -35,6 +36,11 @@ const BrowseCategoryRoute = BrowseCategoryRouteImport.update({
 const EventEventIdRoute = EventEventIdRouteImport.update({
   id: '/event/$eventId',
   path: '/event/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMediaFileIdRoute = ApiMediaFileIdRouteImport.update({
+  id: '/api/media/$fileId',
+  path: '/api/media/$fileId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrowseCategoryZoneRoute = BrowseCategoryZoneRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
   '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
   '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
   '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
   '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/browse/$category': typeof BrowseCategoryRouteWithChildren
   '/event/$eventId': typeof EventEventIdRoute
+  '/api/media/$fileId': typeof ApiMediaFileIdRoute
   '/browse/$category/$zone': typeof BrowseCategoryZoneRouteWithChildren
   '/browse/$category/$zone/$country': typeof BrowseCategoryZoneCountryRouteWithChildren
   '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/browse/$category'
     | '/event/$eventId'
+    | '/api/media/$fileId'
     | '/browse/$category/$zone'
     | '/browse/$category/$zone/$country'
     | '/browse/$category/$zone/$country/$year'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/browse/$category'
     | '/event/$eventId'
+    | '/api/media/$fileId'
     | '/browse/$category/$zone'
     | '/browse/$category/$zone/$country'
     | '/browse/$category/$zone/$country/$year'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/browse/$category'
     | '/event/$eventId'
+    | '/api/media/$fileId'
     | '/browse/$category/$zone'
     | '/browse/$category/$zone/$country'
     | '/browse/$category/$zone/$country/$year'
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   BrowseCategoryRoute: typeof BrowseCategoryRouteWithChildren
   EventEventIdRoute: typeof EventEventIdRoute
+  ApiMediaFileIdRoute: typeof ApiMediaFileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/event/$eventId'
       fullPath: '/event/$eventId'
       preLoaderRoute: typeof EventEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/media/$fileId': {
+      id: '/api/media/$fileId'
+      path: '/api/media/$fileId'
+      fullPath: '/api/media/$fileId'
+      preLoaderRoute: typeof ApiMediaFileIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/browse/$category/$zone': {
@@ -216,6 +236,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   BrowseCategoryRoute: BrowseCategoryRouteWithChildren,
   EventEventIdRoute: EventEventIdRoute,
+  ApiMediaFileIdRoute: ApiMediaFileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
