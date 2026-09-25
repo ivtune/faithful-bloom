@@ -11,7 +11,7 @@ import {
 } from "@/lib/archive/archive.service";
 import { pageHead } from "@/lib/head";
 
-export const Route = createFileRoute("/browse/$category/$zone")({
+export const Route = createFileRoute("/browse/$category/$zone/")({
   head: () =>
     pageHead(
       "Browse Countries — EHC West Africa Media Archive",

@@ -10,7 +10,7 @@ import {
 } from "@/lib/archive/archive.service";
 import { pageHead } from "@/lib/head";
 
-export const Route = createFileRoute("/browse/$category")({
+export const Route = createFileRoute("/browse/$category/")({
   head: ({ params }) => {
     const categoryName = params.category === "margins" ? "Margins" : "Ministries";
     return pageHead(
