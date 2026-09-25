@@ -110,7 +110,7 @@ function buildEvent(
     categoryId: CategoryId;
     zoneId: string;
     country: CountryArea;
-    fallbackDate?: string;
+    fallbackDate?: string | undefined;
   },
 ): EventDetail | null {
   const photos: ArchivePhoto[] = files.filter(isImage).map((f) => {

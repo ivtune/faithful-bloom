@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/media/$fileId")({
 
         const range = request.headers.get("Range");
         const res = await driveFetch(`/files/${fileId}?alt=media&supportsAllDrives=true`, {
-          headers: range ? { Range: range } : undefined,
+          headers: range ? { Range: range } : {},
         });
         if (!res.ok && res.status !== 206) {
           const body = await res.text();
