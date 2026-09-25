@@ -181,15 +181,20 @@ export function getFeaturedMedia(limit: number): FeaturedMedia[] {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const featured: FeaturedMedia[] = [];
-  for (const event of recent) {
-    if (featured.length >= limit) break;
-    const photo = event.photos[0];
-    featured.push({
-      id: photo.id,
-      name: photo.name,
-      thumbnail: photo.thumbnail,
-      event: toSummary(event),
-    });
+  for (let i = 0; featured.length < limit; i++) {
+    let added = false;
+    for (const event of recent) {
+      const photo = event.photos[i];
+      if (!photo || featured.length >= limit) continue;
+      added = true;
+      featured.push({
+        id: photo.id,
+        name: photo.name,
+        thumbnail: photo.thumbnail,
+        event: toSummary(event),
+      });
+    }
+    if (!added) break;
   }
   return featured;
 }
