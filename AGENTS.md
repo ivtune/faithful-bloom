@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- The archive snapshot server function must never throw; on Drive/config failure it logs and returns an empty snapshot. Why: the root loader depends on it, so a throw replaces every page with the error screen (seen on Vercel without Drive env vars).
