@@ -16,7 +16,7 @@ import { Route as ApiMediaFileIdRouteImport } from './routes/api/media.$fileId'
 import { Route as BrowseCategoryIndexRouteImport } from './routes/browse.$category.index'
 import { Route as BrowseCategoryZoneIndexRouteImport } from './routes/browse.$category.$zone.index'
 import { Route as BrowseCategoryZoneCountryIndexRouteImport } from './routes/browse.$category.$zone.$country.index'
-import { Route as BrowseCategoryZoneCountryYearRouteImport } from './routes/browse.$category.$zone.$country.$year'
+import { Route as BrowseCategoryZoneCountryYearRouteImport } from './routes/browse.$category.$zone.$country_.$year'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -56,7 +56,7 @@ const BrowseCategoryZoneCountryIndexRoute =
   } as any)
 const BrowseCategoryZoneCountryYearRoute =
   BrowseCategoryZoneCountryYearRouteImport.update({
-    id: '/browse/$category/$zone/$country/$year',
+    id: '/browse/$category/$zone/$country_/$year',
     path: '/browse/$category/$zone/$country/$year',
     getParentRoute: () => rootRouteImport,
   } as any)
@@ -89,7 +89,7 @@ export interface FileRoutesById {
   '/api/media/$fileId': typeof ApiMediaFileIdRoute
   '/browse/$category/': typeof BrowseCategoryIndexRoute
   '/browse/$category/$zone/': typeof BrowseCategoryZoneIndexRoute
-  '/browse/$category/$zone/$country/$year': typeof BrowseCategoryZoneCountryYearRoute
+  '/browse/$category/$zone/$country_/$year': typeof BrowseCategoryZoneCountryYearRoute
   '/browse/$category/$zone/$country/': typeof BrowseCategoryZoneCountryIndexRoute
 }
 export interface FileRouteTypes {
@@ -121,7 +121,7 @@ export interface FileRouteTypes {
     | '/api/media/$fileId'
     | '/browse/$category/'
     | '/browse/$category/$zone/'
-    | '/browse/$category/$zone/$country/$year'
+    | '/browse/$category/$zone/$country_/$year'
     | '/browse/$category/$zone/$country/'
   fileRoutesById: FileRoutesById
 }
@@ -187,8 +187,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrowseCategoryZoneCountryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/browse/$category/$zone/$country/$year': {
-      id: '/browse/$category/$zone/$country/$year'
+    '/browse/$category/$zone/$country_/$year': {
+      id: '/browse/$category/$zone/$country_/$year'
       path: '/browse/$category/$zone/$country/$year'
       fullPath: '/browse/$category/$zone/$country/$year'
       preLoaderRoute: typeof BrowseCategoryZoneCountryYearRouteImport
