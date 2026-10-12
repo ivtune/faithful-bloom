@@ -33,7 +33,7 @@ export function SiteFooter() {
               <Link
                 key={link.label}
                 to={link.to}
-                params={link.params}
+                params={link.params ?? {}}
                 className="text-primary-foreground/80 transition-colors hover:text-primary-foreground"
               >
                 {link.label}
