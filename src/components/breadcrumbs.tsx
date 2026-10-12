@@ -15,7 +15,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
             {item.to && !isLast ? (
               <Link
                 to={item.to}
-                params={item.params}
+                params={item.params ?? {}}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 {item.label}
