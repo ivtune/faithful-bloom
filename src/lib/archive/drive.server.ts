@@ -15,7 +15,10 @@ import { slugify } from "./slug";
  * Media is always served through /api/media/<id>; Drive URLs never reach the browser.
  */
 
+import { getServiceAccountToken } from "./drive-auth.server";
+
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_drive/drive/v3";
+const DRIVE_API_URL = "https://www.googleapis.com/drive/v3";
 export const ROOT_FOLDER_ID = "1xnU4PDbhHBWJhyK5Kuf6AOceqbsfrc-I";
 const FOLDER = "application/vnd.google-apps.folder";
 const CACHE_MS = 5 * 60 * 1000;
@@ -28,18 +31,34 @@ interface DriveFile {
   imageMediaMetadata?: { time?: string };
 }
 
-function headers(): Record<string, string> {
+/*
+ * Auth resolution: prefer a direct service account (GOOGLE_SERVICE_ACCOUNT_EMAIL /
+ * GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) so deployments like Vercel work without any
+ * Lovable dependency; fall back to the Lovable connector gateway keys when absent.
+ */
+async function driveRequest(path: string, init?: RequestInit): Promise<Response> {
+  const token = await getServiceAccountToken();
+  if (token) {
+    return fetch(`${DRIVE_API_URL}${path}`, {
+      ...init,
+      headers: { Authorization: `Bearer ${token}`, ...(init?.headers as Record<string, string> | undefined) },
+    });
+  }
   const lovable = process.env["LOVABLE_API_KEY"];
   const conn = process.env["GOOGLE_DRIVE_API_KEY"];
   if (!lovable || !conn) throw new Error("Google Drive connection is not configured");
-  return { Authorization: `Bearer ${lovable}`, "X-Connection-Api-Key": conn };
+  return fetch(`${GATEWAY_URL}${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${lovable}`,
+      "X-Connection-Api-Key": conn,
+      ...(init?.headers as Record<string, string> | undefined),
+    },
+  });
 }
 
 export async function driveFetch(path: string, init?: RequestInit): Promise<Response> {
-  return fetch(`${GATEWAY_URL}${path}`, {
-    ...init,
-    headers: { ...headers(), ...(init?.headers as Record<string, string> | undefined) },
-  });
+  return driveRequest(path, init);
 }
 
 async function listChildren(folderId: string): Promise<DriveFile[]> {
